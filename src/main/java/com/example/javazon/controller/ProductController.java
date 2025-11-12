@@ -1,4 +1,4 @@
 package com.example.javazon.controller;
 
-public class CartItem {
+public class ProductController {
 }

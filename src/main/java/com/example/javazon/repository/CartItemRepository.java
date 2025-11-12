@@ -1,4 +1,4 @@
 package com.example.javazon.repository;
 
-public class Order {
+public class CartItemRepository {
 }
