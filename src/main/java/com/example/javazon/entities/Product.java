@@ -1,8 +1,6 @@
-package com.example.javazon.Entities;
+package com.example.javazon.entities;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "PRODUCT")

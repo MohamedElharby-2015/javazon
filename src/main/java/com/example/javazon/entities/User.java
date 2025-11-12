@@ -1,4 +1,4 @@
-package com.example.javazon.Entities;
+package com.example.javazon.entities;
 
 import jakarta.persistence.*;
 
