@@ -1,41 +1,73 @@
 package com.example.javazon.entities;
 
-import java.time.LocalDate;
+import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Cart {
+@Entity
+@Table(name = "CART")
+public class Cart extends SharedEntity {
 
-   private  int  cartId;
-   private int userId;
-   private LocalDate created_Date;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator ="cart_seq")
+    @SequenceGenerator(name = "cart_seq", sequenceName = "CART_SEQ",allocationSize = 1)
+    private int cartId;
+    private int totalAmount;
+    private int totalPrice;
 
+    @OneToOne
+    @JoinColumn(name = "USER_ID",nullable = false)
+    private User user;
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    private List<CartItem> cartItems = new ArrayList<>();
 
-    public Cart(int cartId, int userId, LocalDate created_Date) {
+    public Cart() {}
+
+    public Cart(int cartId, int totalAmount, int totalPrice, User user) {
         this.cartId = cartId;
-        this.userId = userId;
-        this.created_Date = created_Date;
+        this.totalAmount = totalAmount;
+        this.totalPrice = totalPrice;
+        this.user = user;
     }
+
 
     public int getCartId() {
         return cartId;
     }
 
-    public int getUserId() {
-        return userId;
+    public int getTotalAmount() {
+        return totalAmount;
     }
 
-    public LocalDate getCreated_Date() {
-        return created_Date;
+    public int getTotalPrice() {
+        return totalPrice;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public List<CartItem> getCartItems() {
+        return cartItems;
     }
 
     public void setCartId(int cartId) {
         this.cartId = cartId;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setTotalAmount(int totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
-    public void setCreated_Date(LocalDate created_Date) {
-        this.created_Date = created_Date;
+    public void setTotalPrice(int totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
     }
 }
