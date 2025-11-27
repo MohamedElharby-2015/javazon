@@ -1,4 +1,8 @@
 package com.example.javazon.repository;
 
-public class CartItemRepository {
-}
+import com.example.javazon.entities.CartItem;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface CartItemRepository extends JpaRepository<CartItem, Integer> {}
