@@ -72,6 +72,4 @@ public class CartItem extends SharedEntity{
     public void setProduct(Product product) {
         this.product = product;
     }
-
-
 }

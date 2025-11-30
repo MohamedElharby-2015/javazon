@@ -9,22 +9,25 @@ import java.util.List;
 public class Category extends SharedEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_seq")
+    @SequenceGenerator(name = "category_seq", sequenceName = "CATEGORY_SEQ", allocationSize = 1)
     private int categoryId;
 
     private String categoryName;
     private String categoryDescription;
     private boolean active;
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Product> products = new ArrayList<>();
 
     public Category() {}
 
-    public Category(String categoryName, String categoryDescription, boolean active, List<Product> products) {
+    public Category(String categoryName, String categoryDescription, boolean active) {
         this.categoryName = categoryName;
         this.categoryDescription = categoryDescription;
         this.active = active;
-        this.products = products;
+
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
     public int getCategoryId() {
@@ -43,9 +46,6 @@ public class Category extends SharedEntity {
         return active;
     }
 
-    public List<Product> getProducts() {
-        return products;
-    }
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
@@ -60,7 +60,5 @@ public class Category extends SharedEntity {
         this.active = active;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
+
 }

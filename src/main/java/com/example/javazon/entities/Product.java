@@ -12,7 +12,7 @@ public class Product extends SharedEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq")
     @SequenceGenerator(name = "product_seq", sequenceName = "PRODUCT_SEQ", allocationSize = 1)
     private int productId;
-    @Column(name = "PRODUCT_NAME" , nullable = false)
+    @Column(name = "PRODUCT_NAME" , nullable = false, unique = true)
     private String productName;
     private String productDescription;
     private double productPrice;

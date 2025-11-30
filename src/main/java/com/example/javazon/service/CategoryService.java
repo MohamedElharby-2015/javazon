@@ -1,7 +1,9 @@
 package com.example.javazon.service;
 
 import com.example.javazon.entities.Category;
+import com.example.javazon.entities.dtos.CategoryDto;
 import com.example.javazon.repository.CategoryRepository;
+import com.example.javazon.service.mappers.CategoryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,20 +15,31 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    CategoryMapper categoryMapper;
 
-    public Category addCategory(Category category) {
-        return categoryRepository.save(category);
+
+    public CategoryDto addCategory(CategoryDto categorydto) {
+        Category category = categoryMapper.toEntity(categorydto);
+        category.setActive(true);
+        categoryRepository.save(category);
+        return categoryMapper.toDto(category);
+
+    }
+
+    public List<CategoryDto> getAllCategories() {
+        return categoryMapper.toDto(categoryRepository.findAll());
     }
 
 
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+    public CategoryDto getCategoryById(int id) {
+
+      Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
+
+        return categoryMapper.toDto(category);
     }
 
-
-    public Category getCategoryById(int id) {
-        return categoryRepository.findById(id).orElse(null);
-    }
 
     public Category updateCategory(int id, Category updatedCategory) {
         return categoryRepository.findById(id).map(category -> {

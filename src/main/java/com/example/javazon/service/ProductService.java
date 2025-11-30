@@ -1,43 +1,155 @@
 package com.example.javazon.service;
 
+import com.example.javazon.entities.Category;
 import com.example.javazon.entities.Product;
+import com.example.javazon.entities.dtos.CategoryDto;
+import com.example.javazon.entities.dtos.ProductDto;
+import com.example.javazon.model.PagedResponse;
+import com.example.javazon.repository.CategoryRepository;
 import com.example.javazon.repository.ProductRepository;
+import com.example.javazon.service.mappers.ProductMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class ProductService {
+
+    private static final Logger log = LoggerFactory.getLogger(ProductService.class);
+    @Autowired
+    ProductMapper productMapper;
 
     @Autowired
     private ProductRepository productRepository;
 
-    public Product addProduct(Product product) {
-        return productRepository.save(product);
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    public ProductDto addProduct(ProductDto dto) {
+        log.info("Started add product method");
+
+        if (checkProductExists(dto.getProductName())){
+            throw new RuntimeException("Product Name Already Exist");
+        }
+
+
+        Product product = productMapper.toEntity(dto);
+        Category category  = categoryRepository.findById(dto.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Category not found with id: " + dto.getCategoryId()));
+
+        product.setCategory(category);
+        product.setActive(true);
+
+        return productMapper.toDto(productRepository.save(product));
     }
 
-    public List<Product> getAllProduct() {
-        return productRepository.findAll();
+    public boolean checkProductExists(String name) {
+        return productRepository.existsByProductNameNative(name) == 1;
     }
 
-    public Product getProductById(int id) {
-        return productRepository.findById(id).orElse(null);
+
+    public PagedResponse<ProductDto> getAllProduct(int page, int size) {
+
+        int startRow = page * size;
+        int endRow = startRow + size;
+
+        List<Product> products = productRepository.getProductsPaged(startRow, endRow);
+
+        //ask 7arby for this
+        for (Product p : products) {
+            if (p.getCategory() != null)
+                Hibernate.initialize(p.getCategory());
+            if (p.getProducer() != null)
+                Hibernate.initialize(p.getProducer());
+        }
+
+        // Map to DTO
+        List<ProductDto> content = productMapper.toDto(products);
+
+        // Count
+        int total = productRepository.getTotalItems();
+        int totalPages = (int) Math.ceil((double) total / size);
+
+        // Build response
+        PagedResponse<ProductDto> response = new PagedResponse<>();
+        response.setContent(content);
+        response.setTotalElements(total);
+        response.setTotalPages(totalPages);
+        response.setPage(page);
+        response.setSize(size);
+
+        return response;
     }
 
-    public Product updateProduct(int id, Product updatedProduct) {
-        return productRepository.findById(id).map(product -> {
-//            product.setName(updatedProduct.getName());
-//            product.setDescription(updatedProduct.getDescription());
-//            product.setPrice(updatedProduct.getPrice());
-//            product.setStockQuantity(updatedProduct.getStockQuantity());
+    public ProductDto getProductById(int id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+        return productMapper.toDto(product);
+    }
+    public ProductDto updateProduct(int id, ProductDto updatedProductDto) {
 
-            return productRepository.save(product);
-        }).orElse(null);
+        Product currentProduct = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+
+        if (updatedProductDto.getProductName() != null) {
+            currentProduct.setProductName(updatedProductDto.getProductName());
+        }
+        if (updatedProductDto.getProductDescription() != null) {
+            currentProduct.setProductDescription(updatedProductDto.getProductDescription());
+        }
+
+        if (updatedProductDto.getProductPrice() != 0) {
+            currentProduct.setProductPrice(updatedProductDto.getProductPrice());
+        }
+
+        if (updatedProductDto.getStockQuantity() != 0) {
+            currentProduct.setStockQuantity(updatedProductDto.getStockQuantity());
+        }
+
+        if (updatedProductDto.getRating() != 0) {
+            currentProduct.setRating(updatedProductDto.getRating());
+        }
+
+        if (updatedProductDto.getCategoryId() > 0) {
+            Category category = categoryRepository.findById(updatedProductDto.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Category not found with id: " + updatedProductDto.getCategoryId()));
+            currentProduct.setCategory(category);
+        }
+
+        currentProduct.setActive(true);
+
+        Product savedProduct = productRepository.save(currentProduct);
+
+        return productMapper.toDto(savedProduct);
     }
 
-    public void deleteProduct(int id)
+
+    public String assignProductToCategory(int productId, int categoryId ){
+        Product product  = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
+
+        Category category  = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
+
+        product.setCategory(category);
+
+        productRepository.save(product);
+
+        return "Assigned successfully";
+    }
+
+
+    public String deleteProduct(int id)
     {
         productRepository.deleteById(id);
+        return "Product deleted successfully!";
     }
 }
