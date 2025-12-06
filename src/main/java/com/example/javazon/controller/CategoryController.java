@@ -14,22 +14,27 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @PostMapping("/addCategory")
+    @PostMapping("/add")
     public CategoryDto addCategory(@RequestBody CategoryDto categoryDto) {
         return categoryService.addCategory(categoryDto);
     }
 
-    @GetMapping("/getAllCategories")
+    @GetMapping("/all")
     public List<CategoryDto>getAllCategories(){
         return categoryService.getAllCategories();
     }
 
-    @GetMapping("getCategoryById/{id}")
+    @GetMapping("/{id}")
     public CategoryDto getCategoryById(@PathVariable int id){
         return categoryService.getCategoryById(id);
     }
 
-    @DeleteMapping("deleteCategory/{id}")
+    @PutMapping("/{id}")
+    public CategoryDto updateCategory(@PathVariable int id, @RequestBody CategoryDto updatedCategory){
+        return categoryService.updateCategory(id, updatedCategory);
+    }
+
+    @DeleteMapping("/{id}")
     public String deleteCategory(@PathVariable int id){
         categoryService.deleteCategory(id);
         return "deleted Successfully";
