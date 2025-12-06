@@ -12,13 +12,15 @@ public class Product extends SharedEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq")
     @SequenceGenerator(name = "product_seq", sequenceName = "PRODUCT_SEQ", allocationSize = 1)
     private int productId;
-    @Column(name = "PRODUCT_NAME" , nullable = false, unique = true)
+    @Column(name = "PRODUCT_NAME", nullable = false, unique = true)
     private String productName;
     private String productDescription;
     private double productPrice;
     private int stockQuantity;
     private double rating;
     private boolean active;
+    private String mainImgPath;
+
 
     @ManyToOne
     @JoinColumn(name = "CATEGORY_ID")
@@ -34,7 +36,8 @@ public class Product extends SharedEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Favourites> favourites = new ArrayList<>();
 
-    public Product() {}
+    public Product() {
+    }
 
 
     public int getProductId() {
@@ -123,5 +126,13 @@ public class Product extends SharedEntity {
 
     public void setFavourites(List<Favourites> favourites) {
         this.favourites = favourites;
+    }
+
+    public String getMainImgPath() {
+        return mainImgPath;
+    }
+
+    public void setMainImgPath(String mainImgPath) {
+        this.mainImgPath = mainImgPath;
     }
 }

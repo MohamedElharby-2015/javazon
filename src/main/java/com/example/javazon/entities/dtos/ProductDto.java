@@ -8,10 +8,10 @@ public class ProductDto {
     private double productPrice;
     private int stockQuantity;
     private double rating;
-
     private int categoryId;   // For linking category
     private String categoryName;
     private String categoryDescription;
+    private String mainImgPath;
 
     private int producerId;   // For linking producer
     private String producerName;
@@ -104,5 +104,13 @@ public class ProductDto {
 
     public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    public String getMainImgPath() {
+        return mainImgPath;
+    }
+
+    public void setMainImgPath(String mainImgPath) {
+        this.mainImgPath = mainImgPath;
     }
 }

@@ -1,9 +1,11 @@
 package com.example.javazon.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.example.javazon.enums.OrderStatus;
+import com.example.javazon.enums.PaymentMethod;
 import jakarta.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "ORDERS")
@@ -11,65 +13,37 @@ public class Order extends SharedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_seq")
-    @SequenceGenerator(name = "order_seq", sequenceName = "ORDER_SEQ",allocationSize = 1)
+    @SequenceGenerator(name = "order_seq", sequenceName = "ORDER_SEQ", allocationSize = 1)
     private int orderId;
 
-    private int totalAmount;
-    private LocalDate orderDate;
-    private String status;
+    private double totalPrice;
+    private OrderStatus status;
+    private PaymentMethod paymentMethod;
+    private String address;
+
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID" , nullable = false)
-    @JsonBackReference
+    @JoinColumn(name = "USER_ID")
     private User user;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     public Order() {}
 
-    public Order(int orderId, int totalAmount, LocalDate orderDate, String status, User user) {
-        this.orderId = orderId;
-        this.totalAmount = totalAmount;
-        this.orderDate = orderDate;
-        this.status = status;
-        this.user = user;
-    }
+    public int getOrderId() { return orderId; }
+    public double getTotalPrice() { return totalPrice; }
+    public OrderStatus getStatus() { return status; }
+    public PaymentMethod getPaymentMethod() { return paymentMethod; }
+    public String getAddress() { return address; }
+    public User getUser() { return user; }
+    public List<OrderItem> getOrderItems() { return orderItems; }
 
-    public int getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
-    }
-
-    public int getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(int totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    public LocalDate getOrderDate() {
-        return orderDate;
-    }
-
-    public void setOrderDate(LocalDate orderDate) {
-        this.orderDate = orderDate;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+    public void setOrderId(int orderId) { this.orderId = orderId; }
+    public void setTotalPrice(double totalPrice) { this.totalPrice = totalPrice; }
+    public void setStatus(OrderStatus status) { this.status = status; }
+    public void setPaymentMethod(PaymentMethod paymentMethod) { this.paymentMethod = paymentMethod; }
+    public void setAddress(String address) { this.address = address; }
+    public void setUser(User user) { this.user = user; }
+    public void setOrderItems(List<OrderItem> orderItems) { this.orderItems = orderItems; }
 }

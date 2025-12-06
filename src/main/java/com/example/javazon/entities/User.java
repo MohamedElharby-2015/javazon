@@ -27,7 +27,7 @@ public class User  extends SharedEntity {
     private List<Order> orders = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<Cart> carts;
+    private List<CartItem> carts;
 
 
     public User() {

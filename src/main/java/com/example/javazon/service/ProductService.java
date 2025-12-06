@@ -71,14 +71,12 @@ public class ProductService {
                 Hibernate.initialize(p.getProducer());
         }
 
-        // Map to DTO
         List<ProductDto> content = productMapper.toDto(products);
 
-        // Count
         int total = productRepository.getTotalItems();
         int totalPages = (int) Math.ceil((double) total / size);
 
-        // Build response
+
         PagedResponse<ProductDto> response = new PagedResponse<>();
         response.setContent(content);
         response.setTotalElements(total);
