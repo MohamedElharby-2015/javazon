@@ -10,6 +10,8 @@ public class CategoryDto {
 
     private String categoryDescription;
 
+    public CategoryDto(){}
+
     public CategoryDto(int categoryId, String categoryName, String categoryDescription) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;

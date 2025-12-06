@@ -34,7 +34,7 @@ public class ProductService {
         log.info("Adding Product {}" ,dto.getProductName());
 
         if (productRepository.existsByProductNameNative(dto.getProductName()) == 1){
-            throw new RuntimeException("Product Name Already Exists");
+            throw new RuntimeException("Product Name Already Existed");
         }
 
         Product product = productMapper.toEntity(dto);
