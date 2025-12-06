@@ -12,7 +12,7 @@ public class CartItem extends SharedEntity {
     private int cartItemId;
 
     private int quantity;
-    private int subtotal;
+    private double subtotal;
 
     @ManyToOne
     @JoinColumn(name = "PRODUCT_ID")
@@ -29,8 +29,8 @@ public class CartItem extends SharedEntity {
     public void setCartItemId(int cartItemId) { this.cartItemId = cartItemId; }
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
-    public int getSubtotal() { return subtotal; }
-    public void setSubtotal(int subtotal) { this.subtotal = subtotal; }
+    public double getSubtotal() { return subtotal; }
+    public void setSubtotal(double subtotal) { this.subtotal = subtotal; }
     public Product getProduct() { return product; }
     public void setProduct(Product product) { this.product = product; }
     public User getUser() { return user; }

@@ -33,16 +33,16 @@ public class CartItemService {
         User user = userRepository.findById(cartItemDto.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Product product = productRepository.findById(cartItemDto.getProductName())
+        Product product = productRepository.findById(cartItemDto.getProductId())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         CartItem cartItem = new CartItem();
         cartItem.setUser(user);
         cartItem.setProduct(product);
-        cartItem.setQuantity(cartItem.getQuantity());
-        cartItem.setSubtotal((int) (product.getProductPrice() * cartItem.getQuantity()));
+        cartItem.setQuantity(cartItemDto.getQuantity());
+        cartItem.setSubtotal(product.getProductPrice() * cartItem.getQuantity());
         cartItemRepository.save(cartItem);
-        return "Product Added To cart Item Successfully";
+        return "Product added to cartItem successfully";
     }
 
     public List<CartItemDto> getUserCartItems(int userId) {

@@ -4,7 +4,7 @@ public class CartItemDto {
     private int cartItemId;
     private int quantity;
     private int subtotal;
-    private int productName;
+    private int productId;
     private int userId;
 
 
@@ -16,12 +16,12 @@ public class CartItemDto {
         this.cartItemId = cartItemId;
     }
 
-    public int getProductName() {
-        return productName;
+    public int getProductId() {
+        return productId;
     }
 
-    public void setProductName(int productName) {
-        this.productName = productName;
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 
     public int getQuantity() {
