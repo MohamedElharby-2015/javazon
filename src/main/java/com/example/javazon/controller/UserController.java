@@ -2,6 +2,8 @@ package com.example.javazon.controller;
 
 import com.example.javazon.entities.User;
 import com.example.javazon.entities.dtos.UserDto;
+import com.example.javazon.entities.dtos.UserLoginDto;
+import com.example.javazon.entities.dtos.UserRegisterDto;
 import com.example.javazon.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,38 +16,43 @@ public class UserController {
     @Autowired
     UserService userService;
 
+//    check () by name
     @PostMapping("/register")
-    public String register(@RequestBody User user)
+    public String register(@RequestBody UserRegisterDto userRegisterDto)
     {
-        return userService.registerUser(user);
+        return userService.registerUser(userRegisterDto);
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody User user) {
-        boolean success = userService.login(user.getEmail(),user.getPassword());
+    public String login(@RequestBody UserLoginDto userLoginDto) {
+        boolean success = userService.login(userLoginDto);
         return success ? "Login successful!" : "Invalid email or password!";
     }
 
-    @GetMapping("/getAllUsers")
+    @GetMapping("all")
     public List<UserDto> getAllUsers()
     {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/getUserById/{id}")
-    public User getUserById(@PathVariable int id)
+    @GetMapping("/{id}")
+    public UserDto getUserById(@PathVariable int id)
     {
         return userService.getUserById(id);
     }
 
-    @PutMapping("/updateUser/{id}")
-    public User updateUser(@PathVariable int id, @RequestBody User user)
+//    Make it like Category(make mapper method in update *updateEntityFromDto*)
+    @PutMapping("/{id}")
+    public UserRegisterDto updateUser(@PathVariable int id, @RequestBody User user)
     {
         return userService.updateUser(id, user);
     }
 
-    @DeleteMapping("/deleteUser/{id}")
+
+//     check by if () :
+    @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable int id) {
+
         userService.deleteUser(id);
         return "User deleted successfully!";
     }

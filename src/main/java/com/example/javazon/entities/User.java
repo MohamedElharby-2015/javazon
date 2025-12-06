@@ -22,6 +22,11 @@ public class User  extends SharedEntity {
     private String email;
     private String password;
 
+    @ManyToOne
+    @JoinColumn(name = "ROLE_ID")
+    @JsonBackReference
+    private Role role;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Order> orders = new ArrayList<>();
@@ -94,4 +99,25 @@ public class User  extends SharedEntity {
     public List<Order> getOrders() {
         return orders;
     }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    public List<CartItem> getCarts() {
+        return carts;
+    }
+
+    public void setCarts(List<CartItem> carts) {
+        this.carts = carts;
+    }
+
 }
