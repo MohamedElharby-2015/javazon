@@ -2,7 +2,6 @@ package com.example.javazon.service;
 
 import com.example.javazon.entities.Category;
 import com.example.javazon.entities.Product;
-import com.example.javazon.entities.dtos.CategoryDto;
 import com.example.javazon.entities.dtos.ProductDto;
 import com.example.javazon.model.PagedResponse;
 import com.example.javazon.repository.CategoryRepository;
@@ -13,8 +12,6 @@ import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,27 +31,23 @@ public class ProductService {
     private CategoryRepository categoryRepository;
 
     public ProductDto addProduct(ProductDto dto) {
-        log.info("Started add product method");
+        log.info("Adding Product {}" ,dto.getProductName());
 
-        if (checkProductExists(dto.getProductName())){
-            throw new RuntimeException("Product Name Already Exist");
+        if (productRepository.existsByProductNameNative(dto.getProductName()) == 1){
+            throw new RuntimeException("Product Name Already Exists");
         }
 
-
         Product product = productMapper.toEntity(dto);
-        Category category  = categoryRepository.findById(dto.getCategoryId())
+        if (dto.getCategoryId()>0){
+            Category category  = categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + dto.getCategoryId()));
 
-        product.setCategory(category);
-        product.setActive(true);
+            product.setCategory(category);
+        }
 
+        product.setActive(true);
         return productMapper.toDto(productRepository.save(product));
     }
-
-    public boolean checkProductExists(String name) {
-        return productRepository.existsByProductNameNative(name) == 1;
-    }
-
 
     public PagedResponse<ProductDto> getAllProduct(int page, int size) {
 
