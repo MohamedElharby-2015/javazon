@@ -16,9 +16,9 @@ public class UserController {
     @Autowired
     UserService userService;
 
-//    check () by name
+//    check () by name >>Done
     @PostMapping("/register")
-    public String register(@RequestBody UserRegisterDto userRegisterDto)
+    public User register(@RequestBody UserRegisterDto userRegisterDto)
     {
         return userService.registerUser(userRegisterDto);
     }
@@ -43,9 +43,9 @@ public class UserController {
 
 //    Make it like Category(make mapper method in update *updateEntityFromDto*)
     @PutMapping("/{id}")
-    public UserRegisterDto updateUser(@PathVariable int id, @RequestBody User user)
+    public UserRegisterDto updateUser(@PathVariable int id, @RequestBody UserDto userDto)
     {
-        return userService.updateUser(id, user);
+        return userService.updateUser(id, userDto);
     }
 
 

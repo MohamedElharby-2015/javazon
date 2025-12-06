@@ -6,6 +6,8 @@ import com.example.javazon.entities.dtos.UserLoginDto;
 import com.example.javazon.entities.dtos.UserRegisterDto;
 import com.example.javazon.repository.UserRepository;
 import com.example.javazon.service.mappers.UserMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,8 +15,12 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.javazon.service.ProductService.log;
+
 @Service
 public class UserService {
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+
 
     @Autowired
     private UserRepository userRepository;
@@ -24,11 +30,16 @@ public class UserService {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public String registerUser(UserRegisterDto userRegisterDto) {
-        User user = userMapper.toEntity(userRegisterDto);
-        user.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
-        userRepository.save(user);
-        return "User Saved";
+    public User registerUser(UserRegisterDto userRegisterDto) {
+        log.info("Adding User {}" ,userRegisterDto.getUserName());
+
+        if (userRepository.existsByUserName(userRegisterDto.getUserName()))
+        {
+            throw new RuntimeException("User Already Existed");
+        }
+
+       return userRepository.save(userMapper.toEntity(userRegisterDto));
+
     }
 
 
@@ -54,12 +65,15 @@ public class UserService {
         return userMapper.toDto(user);
     }
 
-    public UserDto updateUser(int id, User updatedUser) {
+    public UserRegisterDto updateUser(int id, UserRegisterDto updatedUser)
+    {
+          User currentuser = userRepository.findById(id).orElseThrow(
+                  ()-> new RuntimeException("user not found with id: "+ id));
+        userMapper.updateEntityFromDto(currentuser,updatedUser);
 
-        return userRepository.findById(id).map(user -> {
-            user.setUserName(updatedUser.getUserName());
-               return userRepository.save(user);
-        }).orElse(null);
+        userRepository.save(currentuser);
+
+         return userMapper.toUserRegistrationDto(updatedUser);
     }
 
     public void deleteUser(int id) {
