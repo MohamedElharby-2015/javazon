@@ -41,16 +41,14 @@ public class CategoryService {
     }
 
 
-    public Category updateCategory(int id, Category updatedCategory) {
-        return categoryRepository.findById(id).map(category -> {
+    public CategoryDto updateCategory(int id, CategoryDto updatedCategory) {
+     Category currentCategory =categoryRepository.findById(id).orElseThrow(
+             ()->new RuntimeException("Category not found with id:  " + id));
 
-            category.setCategoryName(updatedCategory.getCategoryName());
-            category.setCategoryDescription(updatedCategory.getCategoryDescription());
-            category.setActive(updatedCategory.isActive());
+     categoryMapper.updateEntityFromDto(currentCategory,updatedCategory);
+     categoryRepository.save(currentCategory);
 
-            return categoryRepository.save(category);
-
-        }).orElse(null);
+     return categoryMapper.toDto(currentCategory);
     }
 
     public void deleteCategory(int id) {
