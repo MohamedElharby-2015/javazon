@@ -90,24 +90,7 @@ public class ProductService {
         Product currentProduct = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
 
-        if (updatedProductDto.getProductName() != null) {
-            currentProduct.setProductName(updatedProductDto.getProductName());
-        }
-        if (updatedProductDto.getProductDescription() != null) {
-            currentProduct.setProductDescription(updatedProductDto.getProductDescription());
-        }
-
-        if (updatedProductDto.getProductPrice() != 0) {
-            currentProduct.setProductPrice(updatedProductDto.getProductPrice());
-        }
-
-        if (updatedProductDto.getStockQuantity() != 0) {
-            currentProduct.setStockQuantity(updatedProductDto.getStockQuantity());
-        }
-
-        if (updatedProductDto.getRating() != 0) {
-            currentProduct.setRating(updatedProductDto.getRating());
-        }
+        productMapper.updateEntityFromDto(updatedProductDto, currentProduct);
 
         if (updatedProductDto.getCategoryId() > 0) {
             Category category = categoryRepository.findById(updatedProductDto.getCategoryId())
@@ -116,12 +99,8 @@ public class ProductService {
         }
 
         currentProduct.setActive(true);
-
-        Product savedProduct = productRepository.save(currentProduct);
-
-        return productMapper.toDto(savedProduct);
+        return productMapper.toDto(productRepository.save(currentProduct));
     }
-
 
     public String assignProductToCategory(int productId, int categoryId ){
         Product product  = productRepository.findById(productId)

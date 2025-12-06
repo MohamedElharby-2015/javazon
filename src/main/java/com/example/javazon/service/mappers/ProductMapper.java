@@ -25,4 +25,13 @@ public interface ProductMapper {
     @Mapping(target = "category", ignore = true)
     @Mapping(target = "producer", ignore = true)
     Product toEntity(ProductDto productDto);
+
+    default void updateEntityFromDto(ProductDto dto, Product entity) {
+        if (dto.getProductName() != null) entity.setProductName(dto.getProductName());
+        if (dto.getProductDescription() != null) entity.setProductDescription(dto.getProductDescription());
+        if (dto.getProductPrice() != 0) entity.setProductPrice(dto.getProductPrice());
+        if (dto.getStockQuantity() != 0) entity.setStockQuantity(dto.getStockQuantity());
+        if (dto.getRating() != 0) entity.setRating(dto.getRating());
+        if (dto.getMainImgPath() != null) entity.setMainImgPath(dto.getMainImgPath());
+    }
 }
