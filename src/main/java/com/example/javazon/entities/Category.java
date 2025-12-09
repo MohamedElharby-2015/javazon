@@ -17,6 +17,10 @@ public class Category extends SharedEntity {
     private String categoryDescription;
     private boolean active;
 
+
+    private String mainImgPath;
+
+
     public Category() {}
 
     public Category(String categoryName, String categoryDescription, boolean active) {
@@ -60,5 +64,11 @@ public class Category extends SharedEntity {
         this.active = active;
     }
 
+    public String getMainImgPath() {
+        return mainImgPath;
+    }
 
+    public void setMainImgPath(String mainImgPath) {
+        this.mainImgPath = mainImgPath;
+    }
 }
