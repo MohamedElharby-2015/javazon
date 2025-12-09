@@ -3,6 +3,7 @@ package com.example.javazon.service;
 import com.example.javazon.entities.Category;
 import com.example.javazon.entities.Product;
 import com.example.javazon.entities.dtos.ProductDto;
+import com.example.javazon.exceptions.EntityNotFoundException;
 import com.example.javazon.model.PagedResponse;
 import com.example.javazon.repository.CategoryRepository;
 import com.example.javazon.repository.ProductRepository;
@@ -40,7 +41,7 @@ public class ProductService {
         Product product = productMapper.toEntity(dto);
         if (dto.getCategoryId()>0){
             Category category  = categoryRepository.findById(dto.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + dto.getCategoryId()));
+                .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + dto.getCategoryId()));
 
             product.setCategory(category);
         }

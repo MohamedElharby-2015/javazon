@@ -11,16 +11,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.javazon.service.ProductService.log;
 
 @Service
 public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
-
 
     @Autowired
     private UserRepository userRepository;
@@ -30,16 +26,16 @@ public class UserService {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public User registerUser(UserRegisterDto userRegisterDto) {
+    public UserRegisterDto registerUser(UserRegisterDto userRegisterDto) {
         log.info("Adding User {}" ,userRegisterDto.getUserName());
 
-        if (userRepository.existsByUserName(userRegisterDto.getUserName()))
+        if (userRepository.existsByUserNameNative(userRegisterDto.getUserName())==1)
         {
             throw new RuntimeException("User Already Existed");
         }
-
-       return userRepository.save(userMapper.toEntity(userRegisterDto));
-
+           User user = userMapper.toEntity(userRegisterDto);
+        user.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
+        return userMapper.toUserRegistrationDto(userRepository.save(user));
     }
 
 
@@ -62,7 +58,7 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow(
                 ()-> new RuntimeException("user not found"));
 
-        return userMapper.toDto(user);
+        return userMapper.toUserDto(user);
     }
 
     public UserRegisterDto updateUser(int id, UserRegisterDto updatedUser)
@@ -70,13 +66,18 @@ public class UserService {
           User currentuser = userRepository.findById(id).orElseThrow(
                   ()-> new RuntimeException("user not found with id: "+ id));
         userMapper.updateEntityFromDto(currentuser,updatedUser);
-
+        if (updatedUser.getPassword()!=null){
+            currentuser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        }
         userRepository.save(currentuser);
 
-         return userMapper.toUserRegistrationDto(updatedUser);
+         return userMapper.toUserRegistrationDto(currentuser);
     }
 
     public void deleteUser(int id) {
+        if (!userRepository.existsById(id)){
+            throw new RuntimeException("user not found eith id: "+id);
+        }
         userRepository.deleteById(id);
     }
 }

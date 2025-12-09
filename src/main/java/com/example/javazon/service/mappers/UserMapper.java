@@ -1,8 +1,6 @@
 package com.example.javazon.service.mappers;
 
-import com.example.javazon.entities.Category;
 import com.example.javazon.entities.User;
-import com.example.javazon.entities.dtos.CategoryDto;
 import com.example.javazon.entities.dtos.UserDto;
 import com.example.javazon.entities.dtos.UserRegisterDto;
 import org.mapstruct.Mapper;
@@ -13,9 +11,10 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    UserDto toUserDto(User user);
-    UserRegisterDto toUserRegistrationDto(UserRegisterDto user);
+    UserDto toUserDto (User user);
+    UserRegisterDto toUserRegistrationDto(User user);
     List<UserDto> toDto(List<User> users);
+
 
     @Mapping(target = "userId", ignore = true)
     @Mapping(target = "orders", ignore = true)
@@ -30,9 +29,6 @@ public interface UserMapper {
         }
         if (userDto.getEmail()!=null){
             user.setEmail(userDto.getEmail());
-        }
-        if (userDto.getPassword()!=null){
-            user.setPassword(userDto.getPassword());
         }
 
     }

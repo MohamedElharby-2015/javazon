@@ -9,7 +9,8 @@ import java.util.List;
 public class Role extends SharedEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq")
+    @SequenceGenerator(name = "seq", sequenceName = "ROLE_SEQ")
     private int roleId;
 
     private String roleName;

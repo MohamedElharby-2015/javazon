@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/product")
+@RequestMapping("/javazon/product")
 public class ProductController {
     @Autowired
     private ProductService productService;
@@ -35,15 +35,15 @@ public class ProductController {
     public ProductDto updateProduct(@PathVariable int id, @RequestBody ProductDto product) {
         return productService.updateProduct(id, product);
     }
+    
+    @PutMapping("/assignCategory/{productId}/{categoryId}")
+    public String assignProductToCategory(@PathVariable int productId, @PathVariable int categoryId) {
+        return productService.assignProductToCategory(productId, categoryId);
+    }
 
     @DeleteMapping("/{id}")
     public String deleteProduct(@PathVariable int id) {
         return  productService.deleteProduct(id);
     }
-    @PutMapping("/assignProductToCategory/{productId}/{categoryId}")
-    public String assignProductToCategory (@PathVariable  int productId , @PathVariable int categoryId){
-       return productService.assignProductToCategory(productId, categoryId);
-    }
-
 
 }

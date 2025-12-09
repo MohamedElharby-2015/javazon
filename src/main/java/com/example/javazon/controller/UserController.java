@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+
+// needed for user cruds only
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -18,7 +21,7 @@ public class UserController {
 
 //    check () by name >>Done
     @PostMapping("/register")
-    public User register(@RequestBody UserRegisterDto userRegisterDto)
+    public UserRegisterDto register(@RequestBody UserRegisterDto userRegisterDto)
     {
         return userService.registerUser(userRegisterDto);
     }
@@ -41,11 +44,11 @@ public class UserController {
         return userService.getUserById(id);
     }
 
-//    Make it like Category(make mapper method in update *updateEntityFromDto*)
+//    Make it like Category(make mapper method in update *updateEntityFromDto*)>>Done
     @PutMapping("/{id}")
-    public UserRegisterDto updateUser(@PathVariable int id, @RequestBody UserDto userDto)
+    public UserRegisterDto updateUser(@PathVariable int id, @RequestBody UserRegisterDto updatedUser)
     {
-        return userService.updateUser(id, userDto);
+        return userService.updateUser(id,updatedUser);
     }
 
 
