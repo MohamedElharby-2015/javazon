@@ -13,5 +13,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             "WHERE u.USER_NAME = :name", nativeQuery = true)
     int existsByUserNameNative(@Param("name") String name);
     boolean existsByEmail(String email);
+    @Query(value = "SELECT * FROM USERS u WHERE u.EMAIL = :email" , nativeQuery = true)
     User findByEmail(String email);
 }
