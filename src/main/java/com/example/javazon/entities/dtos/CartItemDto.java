@@ -3,9 +3,12 @@ package com.example.javazon.entities.dtos;
 public class CartItemDto {
     private int cartItemId;
     private int quantity;
-    private int subtotal;
+    private double subTotal;
     private int productId;
     private int userId;
+    private String userEmail;
+    private String mainImgPath;
+    private String productName;
 
 
     public int getCartItemId() {
@@ -32,19 +35,43 @@ public class CartItemDto {
         this.quantity = quantity;
     }
 
-    public int getSubtotal() {
-        return subtotal;
-    }
-
-    public void setSubtotal(int subtotal) {
-        this.subtotal = subtotal;
-    }
-
     public int getUserId() {
         return userId;
     }
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public double getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(double subTotal) {
+        this.subTotal = subTotal;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getMainImgPath() {
+        return mainImgPath;
+    }
+
+    public void setMainImgPath(String mainImgPath) {
+        this.mainImgPath = mainImgPath;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 }
