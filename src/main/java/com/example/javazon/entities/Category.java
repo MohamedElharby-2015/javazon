@@ -1,8 +1,6 @@
 package com.example.javazon.entities;
 
 import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "CATEGORY")
@@ -12,14 +10,10 @@ public class Category extends SharedEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_seq")
     @SequenceGenerator(name = "category_seq", sequenceName = "CATEGORY_SEQ", allocationSize = 1)
     private int categoryId;
-
     private String categoryName;
     private String categoryDescription;
     private boolean active;
-
-
     private String mainImgPath;
-
 
     public Category() {}
 
