@@ -30,6 +30,8 @@ public class UserService {
 
     @Autowired
     JwtUtil jwtUtil;
+
+    @Autowired
     private NotificationProducerService notificationProducerService;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
