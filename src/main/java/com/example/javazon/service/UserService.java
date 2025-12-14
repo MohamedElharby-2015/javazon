@@ -24,6 +24,9 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private NotificationProducerService notificationProducerService;
+
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public UserRegisterDto registerUser(UserRegisterDto userRegisterDto) {
@@ -35,7 +38,13 @@ public class UserService {
         }
            User user = userMapper.toEntity(userRegisterDto);
         user.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
-        return userMapper.toUserRegistrationDto(userRepository.save(user));
+
+        UserRegisterDto userSavedDto = userMapper.toUserRegistrationDto(userRepository.save(user));
+        if(userSavedDto != null){
+            notificationProducerService.sendWelcomeEmail(userSavedDto.getEmail());
+        }
+
+        return userSavedDto;
     }
 
 
