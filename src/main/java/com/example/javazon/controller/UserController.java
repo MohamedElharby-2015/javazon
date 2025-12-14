@@ -4,8 +4,10 @@ import com.example.javazon.entities.User;
 import com.example.javazon.entities.dtos.UserDto;
 import com.example.javazon.entities.dtos.UserLoginDto;
 import com.example.javazon.entities.dtos.UserRegisterDto;
+import com.example.javazon.model.AuthResponse;
 import com.example.javazon.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,10 +29,11 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody UserLoginDto userLoginDto) {
-        boolean success = userService.login(userLoginDto);
-        return success ? "Login successful!" : "Invalid email or password!";
+    public ResponseEntity<AuthResponse> login(@RequestBody UserLoginDto userLoginDto) {
+        return ResponseEntity.ok(userService.login(userLoginDto));
     }
+
+
 
     @GetMapping("all")
     public List<UserDto> getAllUsers()

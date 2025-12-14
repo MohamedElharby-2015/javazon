@@ -11,7 +11,6 @@ import com.example.javazon.repository.ProductRepository;
 import com.example.javazon.repository.UserRepository;
 import com.example.javazon.service.mappers.CartItemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

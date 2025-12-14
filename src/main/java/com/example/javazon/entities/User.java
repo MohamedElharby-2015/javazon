@@ -16,6 +16,7 @@ public class User  extends SharedEntity {
     @Column(name = "USER_ID")
     private int userId;
 
+    @Column(name="USER_NAME",unique = true, nullable = false)
     private String userName;
     private String firstName;
     private String secondName;
