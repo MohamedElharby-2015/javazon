@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END " +
@@ -14,5 +16,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     int existsByUserNameNative(@Param("name") String name);
     boolean existsByEmail(String email);
     @Query(value = "SELECT * FROM USERS u WHERE u.EMAIL = :email" , nativeQuery = true)
-    User findByEmail(String email);
+    Optional<User> findByEmail(String email);
 }
