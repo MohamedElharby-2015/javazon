@@ -1,15 +1,17 @@
 package com.example.javazon.controller;
 
 import com.example.javazon.entities.User;
+import com.example.javazon.entities.dtos.UserDto;
+import com.example.javazon.entities.dtos.UserLoginDto;
+import com.example.javazon.entities.dtos.UserRegisterDto;
 import com.example.javazon.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
+// needed for user cruds only
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -17,8 +19,44 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @GetMapping(path = "/getAllUsers")
-    public List<User> getAllUsers(){
+//    check () by name >>Done
+    @PostMapping("/register")
+    public UserRegisterDto register(@RequestBody UserRegisterDto userRegisterDto)
+    {
+        return userService.registerUser(userRegisterDto);
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestBody UserLoginDto userLoginDto) {
+        boolean success = userService.login(userLoginDto);
+        return success ? "Login successful!" : "Invalid email or password!";
+    }
+
+    @GetMapping("all")
+    public List<UserDto> getAllUsers()
+    {
         return userService.getAllUsers();
+    }
+
+    @GetMapping("/{id}")
+    public UserDto getUserById(@PathVariable int id)
+    {
+        return userService.getUserById(id);
+    }
+
+//    Make it like Category(make mapper method in update *updateEntityFromDto*)>>Done
+    @PutMapping("/{id}")
+    public UserRegisterDto updateUser(@PathVariable int id, @RequestBody UserRegisterDto updatedUser)
+    {
+        return userService.updateUser(id,updatedUser);
+    }
+
+
+//     check by if () :
+    @DeleteMapping("/{id}")
+    public String deleteUser(@PathVariable int id) {
+
+        userService.deleteUser(id);
+        return "User deleted successfully!";
     }
 }

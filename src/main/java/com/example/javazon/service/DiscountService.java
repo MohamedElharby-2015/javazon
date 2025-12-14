@@ -1,4 +1,4 @@
 package com.example.javazon.service;
 
-public class CartService {
+public class DiscountService {
 }
