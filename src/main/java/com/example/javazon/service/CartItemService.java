@@ -32,10 +32,11 @@ public class CartItemService {
 
 
     public CartItemDto addProductToCart(CartItemDto cartItemDto) {
-        User user = userRepository.findByEmail(cartItemDto.getUserEmail());
+        User user = userRepository.findByEmail(cartItemDto.getUserEmail())
+                .orElseThrow(() -> new EntityNotFoundException("User Not Found"));;
 
         Product product = productRepository.findById(cartItemDto.getProductId())
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
 
         CartItem currentCartItem = cartItemRepository.findByProductProductId(cartItemDto.getProductId());
         if (currentCartItem != null) {

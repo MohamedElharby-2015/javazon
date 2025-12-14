@@ -1,26 +1,26 @@
 package com.example.javazon.model;
 
-import com.example.javazon.entities.User;
-import org.antlr.v4.runtime.Token;
+
+import com.example.javazon.entities.dtos.UserDto;
 
 public class AuthResponse {
-    private User user;
+    private UserDto user;
     private String message;
     private String token;
 
     public AuthResponse(){}
 
-    public AuthResponse(User user, String message, String token) {
+    public AuthResponse(UserDto user, String message, String token) {
         this.user = user;
         this.message = message;
         this.token = token;
     }
 
-    public User getUser() {
+    public UserDto getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserDto user) {
         this.user = user;
     }
 
