@@ -5,8 +5,10 @@ import com.example.javazon.entities.dtos.UserDto;
 import com.example.javazon.entities.dtos.UserLoginDto;
 import com.example.javazon.entities.dtos.UserRegisterDto;
 import com.example.javazon.exceptions.EntityAlreadyExistedException;
+import com.example.javazon.exceptions.EntityNotFoundException;
 import com.example.javazon.model.AuthResponse;
 import com.example.javazon.repository.UserRepository;
+import com.example.javazon.security.JwtUtil;
 import com.example.javazon.service.mappers.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,13 +28,16 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    JwtUtil jwtUtil;
+
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public UserRegisterDto registerUser(UserRegisterDto userRegisterDto) {
         log.info("Adding User {}" ,userRegisterDto.getUserName());
         if (userRepository.existsByUserNameNative(userRegisterDto.getUserName())==1)
         {
-            throw new EntityAlreadyExistedException("User Already Existed");
+            throw new EntityAlreadyExistedException("UserName Already Existed");
         }
         User user = userMapper.toEntity(userRegisterDto);
         user.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
@@ -40,20 +45,21 @@ public class UserService {
     }
 
     public AuthResponse login(UserLoginDto userLoginDto) {
-        User user = userRepository.findByEmail(userLoginDto.getEmail());
-        boolean passwordMatches = passwordEncoder
-                .matches(userLoginDto.getPassword(), user.getPassword());
-        if (!passwordMatches) {
+        User user = userRepository.findByEmail(userLoginDto.getEmail()).orElseThrow(
+                ()-> new EntityNotFoundException("Invalid Email Or Password")
+        );
+        if (!passwordEncoder.matches(userLoginDto.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid email or password");
         }
+        String  token = jwtUtil.generateToken(user);
+
 
         AuthResponse authResponse = new AuthResponse();
-            authResponse.setUser(user);
+            authResponse.setUser(userMapper.toUserDto(user));
             authResponse.setMessage("Login successful");
-            authResponse.setToken(authResponse.getToken());
+            authResponse.setToken(token);
             return authResponse;
         }
-
 
     public List<UserDto> getAllUsers() {
         List<User> users = userRepository.findAll();
